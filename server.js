@@ -22,7 +22,8 @@ wss.on("connection", ws => {
     clients = clients.filter(c => c !== ws);
   });
 });
+const PORT = process.env.PORT || 3000;
 
-server.listen(3000, "0.0.0.0", () => {
-  console.log("Server running on port 3000");
+server.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
