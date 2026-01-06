@@ -4,52 +4,40 @@ const WebSocket = require("ws");
 
 const app = express();
 const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
 // Serve frontend
 app.use(express.static("public"));
 
-app.get("/health", (req, res) => {
-  res.send("CampusMeet server running 🚀");
-});
-
-// WebSocket
-const wss = new WebSocket.Server({ server });
-
-// roomId -> clients
+// Rooms: roomId -> Set of clients
 const rooms = new Map();
 
-wss.on("connection", ws => {
+wss.on("connection", (ws) => {
   ws.roomId = null;
 
-  ws.on("message", message => {
-    const msg = JSON.parse(message.toString());
+  ws.on("message", (message) => {
+    const msg = JSON.parse(message);
 
-    // Join room
+    // JOIN ROOM
     if (msg.type === "join") {
       ws.roomId = msg.roomId;
 
-      if (!rooms.has(ws.roomId)) {
-        rooms.set(ws.roomId, new Set());
-      }
-
+      if (!rooms.has(ws.roomId)) rooms.set(ws.roomId, new Set());
       rooms.get(ws.roomId).add(ws);
 
-      // Notify others
+      // Notify other peers in the room
       rooms.get(ws.roomId).forEach(client => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
+        if (client !== ws) {
           client.send(JSON.stringify({ type: "user-joined" }));
         }
       });
     }
 
-    // Signaling
+    // SIGNALING: offer / answer / candidate
     if (msg.type === "signal") {
       rooms.get(ws.roomId)?.forEach(client => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({
-            type: "signal",
-            data: msg.data
-          }));
+        if (client !== ws) {
+          client.send(JSON.stringify({ type: "signal", data: msg.data }));
         }
       });
     }
@@ -62,8 +50,6 @@ wss.on("connection", ws => {
   });
 });
 
-// Render port
+// Render provides PORT
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

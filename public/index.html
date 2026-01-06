@@ -1,16 +1,32 @@
-<h2>CampusMeet – Real-Time WebRTC</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CampusMeet</title>
+  <style>
+    body { font-family: Arial; }
+    video { width: 300px; border: 2px solid black; margin: 10px; }
+    #videos { display: flex; gap: 20px; }
+  </style>
+</head>
+<body>
 
-<div>
-  <p><b>You</b></p>
-  <video id="localVideo" autoplay muted playsinline></video>
-</div>
+<h2>CampusMeet – 1-to-1 Video Call</h2>
 
-<div>
-  <p><b>Remote User</b></p>
-  <video id="remoteVideo" autoplay playsinline></video>
+<div id="videos">
+  <div>
+    <p><b>You</b></p>
+    <video id="localVideo" autoplay muted playsinline></video>
+  </div>
+
+  <div>
+    <p><b>Remote User</b></p>
+    <video id="remoteVideo" autoplay playsinline></video>
+  </div>
 </div>
 
 <br>
 <button id="callBtn">Start Call</button>
 
 <script src="client.js"></script>
+</body>
+</html>
