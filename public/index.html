@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>CampusMeet</title>
-</head>
-<body>
+<h2>CampusMeet – Real-Time WebRTC</h2>
 
-<h2>CampusMeet – Render Deployment</h2>
-<video id="video" autoplay playsinline></video>
-<br><br>
-<button onclick="join()">Join Meeting</button>
+<div>
+  <p><b>You</b></p>
+  <video id="localVideo" autoplay muted playsinline></video>
+</div>
+
+<div>
+  <p><b>Remote User</b></p>
+  <video id="remoteVideo" autoplay playsinline></video>
+</div>
+
+<br>
+<button id="callBtn">Start Call</button>
 
 <script src="client.js"></script>
-</body>
-</html>
